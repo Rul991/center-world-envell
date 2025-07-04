@@ -1,0 +1,9 @@
+@use '../../../scss/utils/placeholders';
+@use '../../../scss/utils/colors';
+
+.choosed-button {
+    @extend %transition-300ms;
+
+    background: colors.$fore-color;
+    color: colors.$back-color;
+}

@@ -1,0 +1,49 @@
+@use '../../../scss/utils/colors' as colors;
+@use '../../../scss/utils/placeholders';
+@use '../../../scss/utils/sizes';
+
+.card {
+    @extend %transition-300ms;
+
+    display: grid;
+    border: solid colors.$alternative-color 3px;
+    padding: 0.5rem;
+    margin-bottom: 0.7rem;
+
+    width: 60%!important;
+
+    &:hover {
+        border-color: colors.$dark-alternative-color;
+    }
+
+    &-title {
+        font-size: 1.5rem;
+        text-align: center;
+        color: colors.$alternative-color;
+    }
+
+    &-prop {
+        margin-top: 0.2rem;
+        font-size: 1.15rem;
+
+        &-name {
+            color: colors.$dark-fore-color;
+        }
+
+        &-value {
+            color: colors.$card-value-color;
+        }
+    }
+
+    @media (max-width: sizes.$tablet-width) {
+        width: 100%!important;
+    }
+}
+
+.underline-title {
+    border-bottom: 1px solid colors.$alternative-color;
+}
+
+.right-card {
+    justify-self: right;
+}

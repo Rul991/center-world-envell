@@ -1,0 +1,19 @@
+.chat-input {
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    height: 2.25rem;
+    margin-top: 0.2rem;
+    
+    &-input, &-button {
+        
+    }
+    
+    &-input {
+        padding: 0.2rem!important;
+        font-size: 1.35rem!important;
+    }
+
+    &-button {
+        
+    }
+}

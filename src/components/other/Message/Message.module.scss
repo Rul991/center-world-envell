@@ -1,0 +1,17 @@
+@use '../../../scss/utils/colors';
+
+.message {
+    margin-top: 0.5rem;
+
+    &:first-child {
+        margin-top: 1.5rem;
+    }
+
+    &-user {
+        color: colors.$message-user-color;
+    }
+
+    &-message {
+        color: colors.$dark-fore-color;
+    }
+}

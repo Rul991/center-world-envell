@@ -1,0 +1,55 @@
+@use "../../../scss/utils/colors" as colors;
+@use "../../../scss/utils/placeholders" as placeholders;
+
+.switch {
+    @extend %setting-component;
+    grid-template-columns: auto 1fr;
+}
+
+.title {
+    align-self: center;
+    justify-self: right;
+    justify-content: right;
+    justify-items: right;
+    color: colors.$dark-fore-color;
+}
+
+.button {
+    padding: 0.2rem;
+    border: 3px solid colors.$alternative-color;
+    justify-self: right;
+    align-self: center;
+
+    $button-size: 3rem;
+
+    width: $button-size;
+    height: $button-size;
+
+    $sub-button-size: 100%;
+
+    &-on {
+        @extend %transition-300ms;
+        
+        width: $sub-button-size;
+        height: $sub-button-size;
+
+        background: colors.$enable-color;
+
+        &:hover {
+            background: colors.$hover-enable-color;
+        }
+    }
+
+    &-off {
+        @extend %transition-300ms;
+        
+        width: $sub-button-size;
+        height: $sub-button-size;
+        
+        background: colors.$disable-color;
+
+        &:hover {
+            background: colors.$hover-disable-color;
+        }
+    }
+}

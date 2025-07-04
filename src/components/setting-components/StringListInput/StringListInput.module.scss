@@ -1,0 +1,35 @@
+@use '../../../scss/utils/colors';
+@use '../../../scss/utils/placeholders';
+
+.select {
+    @extend %setting-component;
+    align-self: center;
+    background-color: colors.$list-back-color;
+    color: colors.$dark-fore-color;
+    font-size: 1.05rem;
+}
+
+.title {
+    align-self: center;
+}
+
+.option {
+    background-color: colors.$list-back-color;
+    color: colors.$dark-fore-color;
+    justify-self: center;
+
+    &:checked {
+        background-color: colors.$option-back-color;
+    }
+
+    &:hover {
+        appearance: none;
+        background-color: colors.$hover-color;
+        color: colors.$dark-fore-color;
+    }
+}
+
+.string-list {
+    @extend %setting-component;
+    height: 100%;
+}

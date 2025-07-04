@@ -1,0 +1,41 @@
+@use "./utils/colors" as colors;
+@use './utils/placeholders' as placeholders;
+@use './utils/sizes' as sizes;
+
+@font-face {
+    font-family: "Pixy";
+    src: url('/font/PIXY.otf');
+}
+
+* {
+    font-family: 'Pixy'!important;
+    box-sizing: border-box;
+}
+
+body, html {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    height: 100vh;
+}
+
+body {
+    background: colors.$back-color;
+}
+
+main {
+    display: grid;
+    grid-template-columns: 3fr 12fr 5fr;
+
+    @media (max-width: sizes.$large-phone-width) {
+        grid-template-columns: repeat(1, auto);
+    }
+}
+
+#root {
+    height: 100%;
+
+    & > main {
+        height: 90.65%;
+    }
+}

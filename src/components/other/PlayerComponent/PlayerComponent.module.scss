@@ -1,0 +1,33 @@
+@use '../../../scss/utils/_colors.scss' as colors;
+@use '../../../scss/utils/sizes';
+
+.player {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+
+    &:hover {
+        background: colors.$hover-color;
+    }
+}
+
+.mana {
+    color: colors.$mana-color;
+}
+
+.hp {
+    color: colors.$hp-color;
+}
+
+.name {
+    color: colors.$player-name-color;
+}
+
+.classname {
+    color: colors.$player-class-name-color;
+}
+
+.id {
+    font-size: 2rem;
+    color: colors.$id-color;
+    align-self: center;
+}

@@ -1,0 +1,22 @@
+@use '../../../scss/utils/sizes';
+
+.toggles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 0.75rem;
+    row-gap: 0.5rem;
+
+    @media (max-width: sizes.$small-tablet-width) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.setting-title {
+    justify-self: center;
+    font-size: 2rem;
+
+    $margin: 0.35rem;
+    margin-bottom: $margin;
+    margin-top: $margin;
+}

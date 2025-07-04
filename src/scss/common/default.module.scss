@@ -1,0 +1,25 @@
+@use '../utils/placeholders';
+@use '../utils/colors';
+
+.default-styles {
+    @extend %transition-300ms;
+
+    $horisontal-padding: 1.5rem;
+    $vertical-padding: calc($horisontal-padding / 2);
+
+    background: colors.$back-color;
+    color: colors.$fore-color;
+
+    border-radius: 0;
+    border: 2px colors.$fore-color solid;
+
+    width: 100%;
+    font-size: 1rem;
+    
+    padding: $vertical-padding $horisontal-padding;
+    margin-bottom: 0.1rem;
+
+    &:hover {
+        @extend %hover-button;
+    }
+}

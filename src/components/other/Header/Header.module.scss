@@ -1,0 +1,35 @@
+@use "../../../scss/utils/colors" as colors;
+@use "../../../scss/utils/placeholders";
+
+.header {
+    @extend %transition-300ms;
+
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+
+    font-size: 2rem;
+    color: colors.$back-color;
+    background-color: colors.$dark-back-color;
+
+    padding: 1rem;
+
+    & > * {
+        @extend %transition-300ms;
+    }
+
+    & > img {
+        $size: 2rem;
+        width: $size;
+        height: $size;
+        
+        &:hover {
+            transform: scale(1.25);
+        }
+    }
+    
+    & > span {
+        &:hover {
+            color: colors.$hover-color;
+        }
+    }
+}

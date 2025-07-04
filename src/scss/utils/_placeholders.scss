@@ -1,0 +1,21 @@
+@use './colors';
+
+%transition-300ms {
+    transition: all 0.3s ease-in-out;
+}
+
+%hover-button {
+    border-color: colors.$alternative-color;
+}
+
+%setting-component {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 0.5rem;
+
+    padding: 0.3rem;
+    border: 2px solid colors.$alternative-color;
+    color: colors.$dark-fore-color;
+    height: 100%;
+    align-self: center;
+}

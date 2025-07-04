@@ -1,0 +1,5 @@
+@use '../../../scss/utils/colors';
+
+.new-messages {
+    color: colors.$new-message-color;
+}

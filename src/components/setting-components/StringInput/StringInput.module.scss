@@ -1,0 +1,23 @@
+@use '../../../scss/utils/colors';
+@use '../../../scss/utils/placeholders';
+
+.string-input {
+    @extend %setting-component;
+    grid-template-columns: repeat(1, 100%);
+    row-gap: 0.25rem;
+}
+
+.title {
+    align-self: center;
+    justify-self: center;
+}
+
+.input {
+    @extend %setting-component;
+    background: colors.$string-input-back-color;
+    font-size: 1.05rem;
+
+    &::-webkit-input-placeholder, &:-moz-placeholder, &:-ms-input-placeholder, &::placeholder {
+        color: colors.$string-input-fore-color;
+    }
+}

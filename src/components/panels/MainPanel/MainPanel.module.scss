@@ -1,0 +1,15 @@
+@use '../../../scss/utils/colors';
+@use '../../../scss/utils/sizes';
+
+.main-panel {
+    $border-prop: solid 3px colors.$alternative-color;
+    border-left: $border-prop;
+    border-right: $border-prop;
+
+    height: 100%;
+
+    @media (max-width: sizes.$large-phone-width) {
+        border-left: none;
+        border-right: none;
+    }
+}

@@ -1,0 +1,9 @@
+@use '../utils/placeholders';
+@use '../utils/colors';
+
+.focus-button {
+    &:focus {
+        @extend %hover-button;
+        background-color: colors.$alternative-color!important;
+    }
+}
