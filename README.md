@@ -42,5 +42,5 @@
 
 ### Ссылки:
 
-- *Репозиторий движка игры*: [*Click*](https://github.com/traeterno/Ae2D) 
-- *Репозиторий сервера игры*: [*Click*](https://github.com/traeterno/EnvellServer)
+- *Репозиторий движка игры*: [*Клик*](https://github.com/traeterno/Ae2D) 
+- *Репозиторий сервера игры*: [*Клик*](https://github.com/traeterno/EnvellServer)
