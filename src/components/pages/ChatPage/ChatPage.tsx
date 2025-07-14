@@ -9,6 +9,8 @@ import { useCurrentPage, useTotalChatLength, useUpdateInterval } from '../../../
 import Message from '../../other/Message'
 import styles from './ChatPage.module.scss'
 import { CHAT_PAGE_ID } from '../../../utils/consts'
+import ObjectValidator from '../../../utils/ObjectValidator'
+import { messageStringSchema, messageUndefinedSchema } from '../../../utils/schemas'
 
 const ChatPage = () => {
     let parsed: MessageOptions[] = []
@@ -54,13 +56,22 @@ const ChatPage = () => {
 
         ServerFetch.post<MessageOptions[]>({getChat: {messagesLength: totalLength}})
         .then(([result, _]) => {
+            const errorMessage: MessageOptions = {
+                user: 'Ошибка с сервера', 
+                msg: 'Неправильный формат! Нужный формат выглядит так: [{"msg": "Сообщение", "user": "Игрок"}]'
+            }
+
             if(typeof result == 'string') {
-                const message: MessageOptions = {user: 'Ошибка с сервера', msg: result}
-                addMessages([message])
+                errorMessage.msg = result
+                addMessages([errorMessage])
             }
             else {
-                addMessages(result)
-                setTotalLength(totalLength + result.length)
+                if(ObjectValidator.isArrayWithObjects(result, messageStringSchema) || 
+            ObjectValidator.isArrayWithObjects(result, messageUndefinedSchema)) {
+                    addMessages(result)
+                    setTotalLength(totalLength + result.length)
+                }
+                else addMessages([errorMessage])
             }
         })
         .catch((e: Error) => {

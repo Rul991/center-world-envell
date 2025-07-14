@@ -8,33 +8,43 @@ import ClickButton from '../../buttons/ClickButton';
 import Card from '../../other/Card';
 import TogglePage from '../TogglePage';
 import { useToggle } from '../../../utils/hooks'
+import ObjectValidator from '../../../utils/ObjectValidator'
+import { stateSchema } from '../../../utils/schemas'
 
 const MainPage = () => {
     const [states, setStates] = useState<ServerState[]>([])
     const [isUpdate, toggleUpdate] = useToggle(false)
 
     useEffect(() => {
+        const errorStates: ServerState[] = [
+            {
+                title: 'Ошибка!', 
+                props: {
+                    'Ошибка': ObjectValidator.getWrongSchemaMessage(stateSchema)
+                }
+            }
+        ]
+
         ServerFetch.post<ServerState[]>({state: {}})
         .then(([states, _]) => {
+
             if(typeof states == 'string') {
-                setStates([{'title': 'Ошибка!', props: {
-                    'Ошибка': states
-                }}])
+                errorStates[0].props['Ошибка'] = states
+                setStates(errorStates)
             }
-            else setStates(states)
+            else {
+                if(ObjectValidator.isArrayWithObjects(states, stateSchema))
+                    setStates(states)
+                else setStates(errorStates)
+            }
         })
         .catch((e: Error) => {
             console.warn(e)
-            setStates(
-            [
-                {
-                    title: 'Ошибка!', 
-                    props: {
-                        'Название': e.name,
-                        'Описание': e.message,
-                    }
-                }
-            ])
+            errorStates[0].props = {
+                'Название': e.name,
+                'Описание': e.message,
+            }
+            setStates(errorStates)
         })
     }, [isUpdate])
 

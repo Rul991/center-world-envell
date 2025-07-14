@@ -11,7 +11,7 @@ class Server {
   static Vite = 2
 }
 
-const usedServer = Server.Ae
+const usedServer = Server.My
 const serverIp = usedServer == Server.My ? 'http://127.0.0.1:8080/' : AE_IP
 const proxy = usedServer != Server.Vite ? 
     {

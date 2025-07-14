@@ -1,9 +1,18 @@
-import { useState, type ChangeEvent } from 'react'
+import { useEffect, useState, type ChangeEvent } from 'react'
 import type NumberRangeProps from '../../../props/NumberRangeProps'
 import styles from './NumberRange.module.scss'
 
 const NumberRange = ({min = 0, max = 100, value = 0, onChange = _ => {}, title}: NumberRangeProps) => {
     const [currentValue, setValue] = useState(value)
+
+    useEffect(() => {
+        let newValue = currentValue
+
+        if(value > max) newValue = max
+        else if(value < min) newValue = min
+
+        setValue(newValue)
+    }, [])
 
     const getValue = () => {
         return isNaN(currentValue) ? min : currentValue

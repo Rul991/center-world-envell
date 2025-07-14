@@ -7,6 +7,8 @@ import PlayerGenerator from '../../../utils/PlayerOptionsGenerator';
 import ServerFetch from '../../../utils/ServerFetch';
 import ClickButton from '../../buttons/ClickButton/ClickButton';
 import PlayerComponent from '../../other/PlayerComponent';
+import ObjectValidator from '../../../utils/ObjectValidator'
+import { playersSchema } from '../../../utils/schemas'
 
 const PlayerPanel = () => {
     const [update, setUpdate] = useState(false)
@@ -26,7 +28,13 @@ const PlayerPanel = () => {
                 setPlayers([PlayerGenerator.error(status, value)])
             }
             else if(value.length) {
-                setPlayers([PlayerGenerator.cool('Все ок', status), ...value])
+                let newValue: PlayerOptions[] = []
+
+                if(ObjectValidator.isArrayWithObjects(value, playersSchema)) {
+                    newValue = value
+                }
+                
+                setPlayers([PlayerGenerator.cool('Все ок', status), ...newValue])
             }
             else {
                 setPlayers([PlayerGenerator.empty()])
