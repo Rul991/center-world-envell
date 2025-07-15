@@ -58,7 +58,7 @@ const ChatPage = () => {
         .then(([result, _]) => {
             const errorMessage: MessageOptions = {
                 user: 'Ошибка с сервера', 
-                msg: 'Неправильный формат! Нужный формат выглядит так: [{"msg": "Сообщение", "user": "Игрок"}]'
+                msg: ObjectValidator.getWrongSchemaMessage(messageStringSchema)
             }
 
             if(typeof result == 'string') {

@@ -28,13 +28,12 @@ const PlayerPanel = () => {
                 setPlayers([PlayerGenerator.error(status, value)])
             }
             else if(value.length) {
-                let newValue: PlayerOptions[] = []
-
                 if(ObjectValidator.isArrayWithObjects(value, playersSchema)) {
-                    newValue = value
+                    setPlayers([PlayerGenerator.cool('Все ок', status), ...value])
                 }
-                
-                setPlayers([PlayerGenerator.cool('Все ок', status), ...newValue])
+                else {
+                    setPlayers([PlayerGenerator.error(500, ObjectValidator.getWrongSchemaMessage(playersSchema))])
+                }
             }
             else {
                 setPlayers([PlayerGenerator.empty()])
