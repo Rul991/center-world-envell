@@ -7,10 +7,11 @@ import ChatInput from '../../other/ChatInput';
 import TogglePage from '../TogglePage';
 import { useCurrentPage, useTotalChatLength, useUpdateInterval } from '../../../utils/hooks'
 import Message from '../../other/Message'
-import styles from './ChatPage.module.scss'
 import { CHAT_PAGE_ID } from '../../../utils/consts'
 import ObjectValidator from '../../../utils/ObjectValidator'
 import { messageStringSchema, messageUndefinedSchema } from '../../../utils/schemas'
+import styles from './ChatPage.module.scss'
+import defaultStyles from '../../../scss/common/default.module.scss'
 
 const ChatPage = () => {
     let parsed: MessageOptions[] = []
@@ -34,14 +35,23 @@ const ChatPage = () => {
     }
 
     const onSend = (promise: Promise<[MessageOptions | string, number]>) => {
+        const getMessageWithoutNickname = (text: any): string => {
+            if(typeof text == 'string') {
+                const result = text.split(':')
+                return result[1]?.trim() ?? '???'
+            }
+            else return text ?? '???'
+        }
+
         promise
         .then(([result, _]) => {
             if(typeof result == 'string') {
-                const message: MessageOptions = {user: 'Ошибка с сервера', msg: result}
+                const message: MessageOptions = {user: 'Ошибка с сервера', msg: getMessageWithoutNickname(result)}
                 addMessages([message])
             }
 
             else {
+                result.msg = getMessageWithoutNickname(result.msg)
                 addMessages([result])
             }
         })
@@ -81,7 +91,7 @@ const ChatPage = () => {
 
     return (
         <TogglePage pageId={CHAT_PAGE_ID}>
-            <div>
+            <div className={defaultStyles.page}>
                 <ChatInput onSend={onSend} />
                 <div className={styles.messages}>
                     {

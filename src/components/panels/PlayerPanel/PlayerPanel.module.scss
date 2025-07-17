@@ -1,0 +1,7 @@
+@use "../../../scss/utils/sizes";
+
+.panel {
+    @media (max-width: sizes.$large-phone-width) {
+        grid-row: 1;
+    }
+}

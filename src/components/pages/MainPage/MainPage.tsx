@@ -10,6 +10,7 @@ import TogglePage from '../TogglePage';
 import { useToggle } from '../../../utils/hooks'
 import ObjectValidator from '../../../utils/ObjectValidator'
 import { stateSchema } from '../../../utils/schemas'
+import defaultStyles from '../../../scss/common/default.module.scss'
 
 const MainPage = () => {
     const [states, setStates] = useState<ServerState[]>([])
@@ -50,8 +51,15 @@ const MainPage = () => {
 
     return (
         <TogglePage pageId={0}>
-            <ClickButton onClick={() => toggleUpdate()}>Обновить состояние сервера</ClickButton>
-            {states.map((state, i) => <Card key={i} className={i % 2 ? 'right-card': ''} options={state}></Card>)}
+            <div className={defaultStyles.page}>
+                <ClickButton onClick={() => toggleUpdate()}>Обновить состояние сервера</ClickButton>
+                <div>
+                    {
+                        states.map((state, i) => 
+                            <Card key={i} className={i % 2 ? 'right-card': ''} options={state}></Card>)
+                    }
+                </div>
+            </div>
         </TogglePage>
     )
 }

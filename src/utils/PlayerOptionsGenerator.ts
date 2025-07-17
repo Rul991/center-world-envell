@@ -14,15 +14,19 @@ export default class PlayerGenerator {
         return {id: 0, name: text, mana: currentMax, hp: currentMax, className}
     }
 
+    static frisk(text: string): PlayerOptions {
+        return PlayerGenerator.message(text, 200, '-_-')
+    }
+
     static cool(text: string, status: number): PlayerOptions {
-        return PlayerGenerator.message(text, status, ':)')
+        return PlayerGenerator.message(text, status, '^-^')
     }
 
     static error(status: number, text = 'Не могу получить игроков'): PlayerOptions {
-        return PlayerGenerator.message(text, status, ':(')
+        return PlayerGenerator.message(text, status, '@~@')
     }
 
     static empty(): PlayerOptions {
-        return PlayerGenerator.error(200, 'Нет активных игроков')
+        return PlayerGenerator.frisk('Нет активных игроков')
     }
 }

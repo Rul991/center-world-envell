@@ -9,6 +9,7 @@ import ClickButton from '../../buttons/ClickButton/ClickButton';
 import PlayerComponent from '../../other/PlayerComponent';
 import ObjectValidator from '../../../utils/ObjectValidator'
 import { playersSchema } from '../../../utils/schemas'
+import styles from './PlayerPanel.module.scss'
 
 const PlayerPanel = () => {
     const [update, setUpdate] = useState(false)
@@ -45,9 +46,9 @@ const PlayerPanel = () => {
         })
     }, [update])
 
-    return <div className='padding-panel'>
+    return <div className={`padding-panel ${styles.panel}`}>
         <ClickButton onClick={updatePlayers}>Обновить игроков</ClickButton>
-        <div className='players-list'>
+        <div className={`players-list`}>
             {players.map((player, i) => <PlayerComponent key={i} options={player} />)}
         </div>
     </div>

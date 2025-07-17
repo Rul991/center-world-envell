@@ -1,5 +1,6 @@
 @use '../utils/placeholders';
 @use '../utils/colors';
+@use '../utils/sizes';
 
 .default-styles {
     @extend %transition-300ms;
@@ -19,7 +20,32 @@
     padding: $vertical-padding $horisontal-padding;
     margin-bottom: 0.1rem;
 
+    @media (max-width: sizes.$tablet-width) and (min-width: sizes.$large-phone-width) {
+        $decrease-scale: 2.5;
+        padding-left: calc($horisontal-padding / $decrease-scale);
+        padding-right: calc($horisontal-padding / $decrease-scale);
+    }
+
     &:hover {
         @extend %hover-button;
+    }
+}
+
+.page {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    row-gap: 12px;
+    height: calc(100vh - 80px);
+
+    scrollbar-color: colors.$alternative-color colors.$back-color;
+    scrollbar-width: thin;
+    
+    &::-webkit-scrollbar-track {
+        background: colors.$back-color;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: colors.$alternative-color;
+        border-radius: 0;
     }
 }

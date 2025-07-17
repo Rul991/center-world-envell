@@ -1,4 +1,6 @@
+@use "../../../scss/utils/colors" as colors;
+
 .messages {
-    height: 50%;
+    height: 100%;
     overflow-y: auto;
 }

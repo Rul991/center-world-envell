@@ -1,7 +1,6 @@
 import ClickButton from '../../buttons/ClickButton';
 import TogglePage from '../TogglePage';
 import ToggleSwitch from '../../setting-components/ToggleSwitch';
-import styles from './SettingsPage.module.scss'
 import NumberRange from '../../setting-components/NumberRange'
 import ServerFetch from '../../../utils/ServerFetch'
 import type { ClientSettings, SettingListProps, SettingRangeProps, Settings, SettingsComponentValue, SettingValue } from '../../../utils/types'
@@ -11,6 +10,8 @@ import StringListInput from '../../setting-components/StringListInput'
 import SettingsParser from '../../../utils/SettingsParser'
 import { useToggle } from '../../../utils/hooks'
 import ObjectValidator from '../../../utils/ObjectValidator'
+import styles from './SettingsPage.module.scss'
+import defaultStyles from '../../../scss/common/default.module.scss'
 
 const SettingsPage = () => {
     const [settings, setRawSettings] = useState<Settings>({})
@@ -29,7 +30,10 @@ const SettingsPage = () => {
     const saveClick = () => {
         ServerFetch.post<{}>({saveSettings: clientSettings})
         .then(() => alert('Сохранено! Настройки обновятся после перезапуска сервера!'))
-        .catch(e => console.error(e))
+        .catch(e => {
+            console.error(e)
+            alert('Не удалось сохранить настройки :(')
+        })
     }
 
     const updateClick = () => {
@@ -103,22 +107,27 @@ const SettingsPage = () => {
 
     return (
         <TogglePage pageId={2}>
-            <ClickButton onClick={updateClick}>Обновить настройки с сервера</ClickButton>
-            <ClickButton onClick={saveClick}>Сохранить изменения</ClickButton>
-            <br />
-
-            {
-                Object.entries(settings).map(([sectionName, sectionValue], i) => 
-                    <div key={i}>
-                        <div className={styles['setting-title']}>{sectionName}</div>
-                        <div className={styles.toggles}>
-                            {
-                                getElements(sectionValue)
-                            }
-                        </div>
-                    </div>
-                )
-            }
+            <div className={defaultStyles.page}>
+                <div>
+                    <ClickButton onClick={updateClick}>Обновить настройки с сервера</ClickButton>
+                    <ClickButton onClick={saveClick}>Сохранить изменения</ClickButton>
+                    <br />
+                </div>
+                <div>
+                    {
+                        Object.entries(settings).map(([sectionName, sectionValue], i) => 
+                            <div key={i}>
+                                <div className={styles['setting-title']}>{sectionName}</div>
+                                <div className={styles.toggles}>
+                                    {
+                                        getElements(sectionValue)
+                                    }
+                                </div>
+                            </div>
+                        )
+                    }
+                </div>
+            </div>
         </TogglePage>
     )
 }
