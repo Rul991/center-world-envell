@@ -36,16 +36,4 @@
     grid-template-rows: auto 1fr;
     row-gap: 12px;
     height: calc(100vh - 80px);
-
-    scrollbar-color: colors.$alternative-color colors.$back-color;
-    scrollbar-width: thin;
-    
-    &::-webkit-scrollbar-track {
-        background: colors.$back-color;
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background: colors.$alternative-color;
-        border-radius: 0;
-    }
 }

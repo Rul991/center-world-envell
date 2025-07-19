@@ -77,9 +77,9 @@ const ChatPage = () => {
             }
             else {
                 if(ObjectValidator.isArrayWithObjects(result, messageStringSchema) || 
-            ObjectValidator.isArrayWithObjects(result, messageUndefinedSchema)) {
-                    addMessages(result)
-                    setTotalLength(totalLength + result.length)
+                    ObjectValidator.isArrayWithObjects(result, messageUndefinedSchema)) {
+                        addMessages(result)
+                        setTotalLength(totalLength + result.length)
                 }
                 else addMessages([errorMessage])
             }

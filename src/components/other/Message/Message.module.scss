@@ -9,9 +9,11 @@
 
     &-user {
         color: colors.$message-user-color;
+        overflow-x: auto;
     }
 
     &-message {
         color: colors.$dark-fore-color;
+        overflow-x: auto;
     }
 }

@@ -12,6 +12,20 @@
     box-sizing: border-box;
 }
 
+* {
+    scrollbar-color: colors.$alternative-color colors.$back-color;
+    scrollbar-width: thin;
+    
+    &::-webkit-scrollbar-track {
+        background: colors.$back-color;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: colors.$alternative-color;
+        border-radius: 0;
+    }
+}
+
 body, html {
     padding: 0;
     margin: 0;
