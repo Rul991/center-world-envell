@@ -6,6 +6,15 @@ const Header = () => {
     const [chance] = useState(Math.random())
     const [logo, setLogo] = useState('images/logo.png')
 
+    const resetCache = () => {
+        sessionStorage.removeItem('messages')
+        sessionStorage.removeItem('page-id')
+        sessionStorage.removeItem('total-length')
+        
+        alert('Кэш очищен! Перезагружаю страницу...')
+        location.reload()
+    }
+
     useEffect(() => {
         const isMorgart = chance < MORGART_CHANCE
 
@@ -24,7 +33,7 @@ const Header = () => {
 
     return <header className={styles.header}>
         <img src={logo} alt="logo" />
-        <span>Центр мира</span>
+        <span onDoubleClick={resetCache}>Центр мира</span>
     </header>
 }
 
