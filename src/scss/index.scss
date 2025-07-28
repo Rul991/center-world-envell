@@ -3,12 +3,17 @@
 @use './utils/sizes' as sizes;
 
 @font-face {
+    font-family: "h12";
+    src: url('/font/h12.otf');
+}
+
+@font-face {
     font-family: "Pixy";
     src: url('/font/PIXY.otf');
 }
 
 * {
-    font-family: 'Pixy'!important;
+    font-family: 'PIXY';
     box-sizing: border-box;
 }
 
@@ -59,4 +64,8 @@ main {
     & > main {
         height: 90.65%;
     }
+}
+
+input {
+    font-family: 'h12';
 }
