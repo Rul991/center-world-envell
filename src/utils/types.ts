@@ -35,14 +35,16 @@ export type PrimitiveJavascriptTypes =
   | 'function'
   | 'object'
   | 'array'
-
-export type ArrayJavascriptTypes = `${PrimitiveJavascriptTypes}[]`
+  | 'any'
 
 export type ObjectJavascriptTypes = Record<string, PrimitiveJavascriptTypes | Record<string, PrimitiveJavascriptTypes>>
-
-export type JavascriptTypes = PrimitiveJavascriptTypes | ObjectJavascriptTypes
+export type JavascriptTypes = PrimitiveJavascriptTypes | ObjectJavascriptTypes | (PrimitiveJavascriptTypes | ObjectJavascriptTypes)[]
 
 // shorthands
 
 export type AnyRecord = Record<string, any>
-export type SchemaObject<T extends AnyRecord> = Record<keyof T, JavascriptTypes>
+export type SchemaObject<T> = Record<keyof T, JavascriptTypes>
+
+// objects
+
+export type WebSocketMessage<T> = { type: string, data: T }

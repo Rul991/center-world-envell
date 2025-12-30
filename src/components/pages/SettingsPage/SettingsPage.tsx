@@ -2,13 +2,12 @@ import ClickButton from '../../buttons/ClickButton';
 import TogglePage from '../TogglePage';
 import ToggleSwitch from '../../setting-components/ToggleSwitch';
 import NumberRange from '../../setting-components/NumberRange'
-import ServerFetch from '../../../utils/ServerFetch'
+import WebSocketManager from '../../../utils/WebSocketManager'
 import type { ClientSettings, SettingListProps, SettingRangeProps, Settings, SettingsComponentValue, SettingValue } from '../../../utils/types'
 import { useEffect, useState } from 'react'
 import StringInput from '../../setting-components/StringInput'
 import StringListInput from '../../setting-components/StringListInput'
 import SettingsParser from '../../../utils/SettingsParser'
-import { useToggle } from '../../../utils/hooks'
 import ObjectValidator from '../../../utils/ObjectValidator'
 import styles from './SettingsPage.module.scss'
 import defaultStyles from '../../../scss/common/default.module.scss'
@@ -16,7 +15,6 @@ import defaultStyles from '../../../scss/common/default.module.scss'
 const SettingsPage = () => {
     const [settings, setRawSettings] = useState<Settings>({})
     const [clientSettings, setClientSettings] = useState<ClientSettings>({})
-    const [update, toggleUpdate] = useToggle(false)
 
     const setSettings = (setting: Settings) => {
         setRawSettings(setting)
@@ -28,46 +26,37 @@ const SettingsPage = () => {
     }
 
     const saveClick = () => {
-        ServerFetch.post<{}>({saveSettings: clientSettings})
-        .then(() => alert('Сохранено! Настройки обновятся после перезапуска сервера!'))
-        .catch(e => {
-            console.error(e)
-            alert('Не удалось сохранить настройки :(')
-        })
-    }
-
-    const updateClick = () => {
-        toggleUpdate()
+        WebSocketManager.send('saveSettings', clientSettings)
     }
 
     useEffect(() => {
-        ServerFetch.post<Settings>({getSettings: {}})
-        .then(([value, _]) => {
-            if(typeof value == 'string') {
-                setRawSettings(SettingsParser.getError(value))
-            }
-            else {
-                let isError = false
+        WebSocketManager.on<Settings>('getSettings', data => {
+            let isError = false
 
-                if(ObjectValidator.isObject(value)) {
-                    for(const title in value) {
-                        if(isError) break
+            if(ObjectValidator.isObject(data)) {
+                for(const title in data) {
+                    if(isError) break
 
-                        if(!ObjectValidator.isObject(value[title])) {
-                            isError = true
-                        }
+                    if(!ObjectValidator.isObject(data[title])) {
+                        isError = true
                     }
                 }
-                else isError = true
-
-                if(!isError) setSettings(value)
-                else setRawSettings(SettingsParser.getError('Parsing Error'))
             }
+            else isError = true
+
+            if(!isError) setSettings(data)
+            else setRawSettings(SettingsParser.getError('Parsing Error'))
         })
-        .catch((e: Error) => {
-            setRawSettings(SettingsParser.getError(e.message))
+
+        WebSocketManager.on<void>('saveSettings', () => {
+            alert('Сохранено!')
         })
-    }, [update])
+
+        return () => {
+            WebSocketManager.off('getSettings')
+            WebSocketManager.off('saveSettings')
+        }
+    }, [])
 
     const getElements = (sectionValue: Record<string, SettingValue>) => {
         try {
@@ -109,7 +98,6 @@ const SettingsPage = () => {
         <TogglePage pageId={2}>
             <div className={defaultStyles.page}>
                 <div>
-                    <ClickButton onClick={updateClick}>Обновить настройки с сервера</ClickButton>
                     <ClickButton onClick={saveClick}>Сохранить изменения</ClickButton>
                     <br />
                 </div>

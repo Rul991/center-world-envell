@@ -6,7 +6,7 @@ import {
 } from 'react';
 import type MessageOptions from '../../../interfaces/MessageOptions';
 import type ChatInputProps from '../../../props/ChatInputProps';
-import ServerFetch from '../../../utils/ServerFetch';
+import WebSocketManager from '../../../utils/WebSocketManager';
 import ClickButton from '../../buttons/ClickButton';
 import defaultStyles from '../../../scss/common/default.module.scss'
 import styles from './ChatInput.module.scss'
@@ -26,10 +26,18 @@ const ChatInput = ({onSend = () => {}}: ChatInputProps) => {
         const trimmedValue = text.trim()
         
         if(trimmedValue.length) {
-            onSend(ServerFetch.post<MessageOptions>({chat: {msg: trimmedValue}}))
+            WebSocketManager.send<MessageOptions>('newMessage', {msg: trimmedValue})
             setText('')
         }
     }
+
+    useEffect(() => {
+        WebSocketManager.on<MessageOptions>('newMessage', data => {
+            onSend(data)
+        })
+
+        return () => WebSocketManager.off('newMessage')
+    }, [])
 
     useEffect(() => {
         if(!input.current) return

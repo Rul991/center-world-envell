@@ -10,7 +10,8 @@ export default class ObjectValidator {
         'undefined': undefined,
         'function': undefined,
         'object': {},
-        'array': []
+        'array': [],
+        'any': {}
     }
 
     static createExampleObject<T extends AnyRecord>(schema: SchemaObject<T>): T {
@@ -58,23 +59,31 @@ export default class ObjectValidator {
 
     static isValidatedObject<T extends AnyRecord>(obj: T, schema: SchemaObject<T>): boolean {
         for (const key of Object.keys(schema)) {
-            let isError = false
+            const value = schema[key]
+            const valueArray = value instanceof Array ? value : [value]
 
-            if(typeof schema[key] == typeof obj[key] && typeof schema[key] == 'object') {
-                isError = !this.isValidatedObject(obj[key], schema[key])
-            }
-            else if(schema[key] == 'array' && this.isArray(obj[key])) {
-                isError = false
-            }
-            else if(schema[key] != typeof obj[key]) {
-                isError = true
-            }
-            else if(schema[key] == 'object' && obj[key] === null) {
-                isError = true
+            for (const type of valueArray) {
+                let isError = false
+
+                if(type == 'any') {
+                    continue
+                }
+                if(typeof type == typeof obj[key] && typeof type == 'object') {
+                    isError = !this.isValidatedObject(obj[key], type)
+                }
+                else if(type == 'array' && this.isArray(obj[key])) {
+                    isError = false
+                }
+                else if(type != typeof obj[key]) {
+                    isError = true
+                }
+                else if(type == 'object' && obj[key] === null) {
+                    isError = true
+                }
+
+                if(isError) return false
             }
 
-
-            if(isError) return false
         }
 
         return true

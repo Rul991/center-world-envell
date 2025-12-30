@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ToggleButton from '../ToggleButton'
 import styles from './ChatToggleButton.module.scss'
-import { useCurrentPage, useTotalChatLength, useUpdateInterval } from '../../../utils/hooks'
-import ServerFetch from '../../../utils/ServerFetch'
+import { useCurrentPage, useTotalChatLength } from '../../../utils/hooks'
+import WebSocketManager from '../../../utils/WebSocketManager'
 import { CHAT_PAGE_ID } from '../../../utils/consts'
 
 const ChatToggleButton = () => {
@@ -15,11 +15,10 @@ const ChatToggleButton = () => {
         setLength(0)
     }
 
-    useUpdateInterval(() => {
+    useEffect(() => {
         if(currentPage == CHAT_PAGE_ID) return
 
-        ServerFetch.post<number>({chatLength: {}})
-        .then(([result, _]) => {
+        WebSocketManager.on<number>('chatLength', result => {
             if(typeof result == 'number') {
                 const newMessagesLength = Math.max(result - totalLength, 0)
 
@@ -39,12 +38,16 @@ const ChatToggleButton = () => {
                 console.error(`Server Error: ${result}`)
             }
         })
-        .catch((e: Error) => {
-            console.error(e)
-        }) 
     }, [totalLength, length, currentPage, notReadMessages])
 
-    return <ToggleButton className={length > 0 ? styles['new-messages'] : ''} onToggle={onToggle} title={`Чат ${length > 0 ? `(${length})` : ''}`} id={1}></ToggleButton>
+    return (
+        <ToggleButton
+            className={length > 0 ? styles['new-messages'] : ''} 
+            onToggle={onToggle} 
+            title={`Чат ${length > 0 ? `(${length})` : ''}`} 
+            id={1}
+        ></ToggleButton>
+    )
 }
 
 export default ChatToggleButton

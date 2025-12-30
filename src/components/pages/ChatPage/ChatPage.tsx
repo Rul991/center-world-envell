@@ -1,11 +1,12 @@
 import {
+    useEffect,
     useState,
 } from 'react';
 import type MessageOptions from '../../../interfaces/MessageOptions';
-import ServerFetch from '../../../utils/ServerFetch';
+import WebSocketManager from '../../../utils/WebSocketManager';
 import ChatInput from '../../other/ChatInput';
 import TogglePage from '../TogglePage';
-import { useCurrentPage, useTotalChatLength, useUpdateInterval } from '../../../utils/hooks'
+import { useTotalChatLength } from '../../../utils/hooks'
 import Message from '../../other/Message'
 import { CHAT_PAGE_ID } from '../../../utils/consts'
 import ObjectValidator from '../../../utils/ObjectValidator'
@@ -25,7 +26,6 @@ const ChatPage = () => {
     }
 
     const [messages, setMessages] = useState<MessageOptions[]>(parsed)
-    const [currentPage] = useCurrentPage()
     const [totalLength, setTotalLength] = useTotalChatLength()
 
     const addMessages = (newMessages: MessageOptions[]) => {
@@ -34,7 +34,7 @@ const ChatPage = () => {
         sessionStorage.setItem('messages', JSON.stringify(messagesArray))
     }
 
-    const onSend = (promise: Promise<[MessageOptions | string, number]>) => {
+    const onSend = (data: MessageOptions) => {
         const getMessageWithoutNickname = (text: any): string => {
             if(typeof text == 'string') {
                 const result = text.split(':')
@@ -43,51 +43,32 @@ const ChatPage = () => {
             else return text ?? '???'
         }
 
-        promise
-        .then(([result, _]) => {
-            if(typeof result == 'string') {
-                const message: MessageOptions = {user: 'Ошибка с сервера', msg: getMessageWithoutNickname(result)}
-                addMessages([message])
-            }
-
-            else {
-                result.msg = getMessageWithoutNickname(result.msg)
-                addMessages([result])
-            }
-        })
-        .catch((e: Error) => {
-            const message: MessageOptions = {user: 'Ошибка', msg: e.message}
-            addMessages([message])
-        })
+        console.log(data)
+        data.msg = getMessageWithoutNickname(data.msg)
+        addMessages([data])
     }
 
-    useUpdateInterval(() => {
-        if(currentPage != CHAT_PAGE_ID) return
+    useEffect(() => {
+        WebSocketManager.send('chatMessages', {messagesLength: totalLength})
+    }, [])
 
-        ServerFetch.post<MessageOptions[]>({getChat: {messagesLength: totalLength}})
-        .then(([result, _]) => {
+    useEffect(() => {
+        WebSocketManager.on<MessageOptions[]>('chatMessages', result => {
             const errorMessage: MessageOptions = {
                 user: 'Ошибка с сервера', 
                 msg: ObjectValidator.getWrongSchemaMessage(messageStringSchema)
             }
 
-            if(typeof result == 'string') {
-                errorMessage.msg = result
-                addMessages([errorMessage])
+            if(ObjectValidator.isArrayWithObjects(result, messageStringSchema) || 
+                ObjectValidator.isArrayWithObjects(result, messageUndefinedSchema)) {
+                    addMessages(result)
+                    setTotalLength(totalLength + result.length)
             }
-            else {
-                if(ObjectValidator.isArrayWithObjects(result, messageStringSchema) || 
-                    ObjectValidator.isArrayWithObjects(result, messageUndefinedSchema)) {
-                        addMessages(result)
-                        setTotalLength(totalLength + result.length)
-                }
-                else addMessages([errorMessage])
-            }
+            else addMessages([errorMessage])
         })
-        .catch((e: Error) => {
-            console.error(e)
-        })
-    }, [currentPage, totalLength])
+
+        return () => WebSocketManager.off('chatMessages')
+    }, [totalLength])
 
     return (
         <TogglePage pageId={CHAT_PAGE_ID}>

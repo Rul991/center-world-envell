@@ -1,7 +1,7 @@
 import type MessageOptions from '../interfaces/MessageOptions'
 import type PlayerOptions from '../interfaces/PlayerOptions'
 import type ServerState from '../interfaces/ServerState'
-import type { SchemaObject } from './types'
+import type { SchemaObject, WebSocketMessage } from './types'
 
 export const messageUndefinedSchema: SchemaObject<MessageOptions> = {
     user: 'undefined',
@@ -30,4 +30,9 @@ export const playersSchema: SchemaObject<PlayerOptions> = {
         current: 'number',
         max: 'number'
     }
+}
+
+export const webSocketMessageSchema: SchemaObject<WebSocketMessage<any>> = {
+    type: 'string',
+    data: 'any'
 }
