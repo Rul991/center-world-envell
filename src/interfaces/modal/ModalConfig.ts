@@ -1,4 +1,4 @@
-import type ModalComponent from './ModalComponent'
+import type { ModalComponent } from './modal-types'
 import type ModalOptions from './ModalOptions'
 
 export default interface ModalConfig {

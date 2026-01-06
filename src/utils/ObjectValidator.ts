@@ -11,7 +11,7 @@ export default class ObjectValidator {
         return `Неправильный формат!`
     }
 
-    static isValidatedObject<T>(obj: T, schema: SchemaObject<T>): boolean {
+    static isValidatedObject<T>(obj: any, schema: SchemaObject<T>): obj is T {
         const validator = this._ajv.compile<T>(schema)
         const isValid = validator(obj)
 

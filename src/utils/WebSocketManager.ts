@@ -14,22 +14,22 @@ export default class WebSocketManager {
     private static _isCreatedListener = false
 
     private static _createListeners() {
-        if(this._isCreatedListener) return
+        if (this._isCreatedListener) return
         this._isCreatedListener = true
 
         this._webSocket.addEventListener('message', e => {
             try {
                 const parsedValue: WebSocketMessage<any> = JSON.parse(e.data)
-                if(!ObjectValidator.isValidatedObject(parsedValue, webSocketMessageSchema)) {
+                if (!ObjectValidator.isValidatedObject(parsedValue, webSocketMessageSchema)) {
                     throw new Error(`Wrong message`)
                 }
 
                 const listener = this._listeners[parsedValue.type]
-                if(listener) {
+                if (listener) {
                     listener.callback(parsedValue.data)
                 }
             }
-            catch(e) {
+            catch (e) {
                 console.error(e)
             }
         })
@@ -39,36 +39,48 @@ export default class WebSocketManager {
             this._webSocket = new WebSocket(this._ip)
         })
 
-        this._webSocket.addEventListener('close', e => {
+        this._webSocket.addEventListener('close', _ => {
             this._webSocket = new WebSocket(this._ip)
         })
     }
 
     static send<T>(name: string, data: T): void {
         const send = (id?: number) => {
-            if(this._webSocket.readyState != WebSocket.OPEN) return false
+            if (this._webSocket.readyState != WebSocket.OPEN) return false
 
-            this._webSocket.send(JSON.stringify({[name]: data}))
-            if(id) clearInterval(id)
+            this._webSocket.send(JSON.stringify({ [name]: data }))
+            console.log({
+                data,
+                name,
+                title: 'WebSocketManager.send'
+            })
+            if (id) clearInterval(id)
 
             return true
         }
 
-        if(send()) return
+        if (send()) return
         let id = setInterval(() => {
             send(id)
         }, MILLSECONDS_IN_SECOND * UPDATE_PER_SECOND)
     }
 
     static on<T>(
-        name: string, 
+        name: string,
         callback: Callback<T>
     ): void {
         this._createListeners()
 
         this._listeners[name] = {
             name,
-            callback
+            callback: data => {
+                console.log({
+                    data,
+                    name,
+                    title: 'WebSocketManager.on'
+                })
+                callback(data)
+            }
         }
     }
 

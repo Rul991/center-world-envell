@@ -14,6 +14,10 @@ const NumberRange = ({min = 0, max = 100, value = 0, onChange = _ => {}, title}:
         setValue(newValue)
     }, [])
 
+    useEffect(() => {
+        onChange(currentValue)
+    }, [currentValue])
+
     const getValue = () => {
         return isNaN(currentValue) ? min : currentValue
     }

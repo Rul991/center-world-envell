@@ -9,6 +9,7 @@ import PlayerComponent from '../../other/PlayerComponent';
 import ObjectValidator from '../../../utils/ObjectValidator'
 import { playersSchema } from '../../../utils/schemas'
 import styles from './PlayerPanel.module.scss'
+import PlayerOptionsGenerator from '../../../utils/PlayerOptionsGenerator'
 
 const PlayerPanel = () => {
     const [players, setPlayers] = useState<PlayerOptions[]>([])
@@ -36,6 +37,11 @@ const PlayerPanel = () => {
 
     return <div className={`padding-panel ${styles.panel}`}>
         <div className={`players-list`}>
+            {
+                players.length <= 0 ? 
+                    <PlayerComponent options={PlayerOptionsGenerator.empty()} /> :
+                    undefined
+            }
             {players.map((player, i) => <PlayerComponent key={i} options={player} />)}
         </div>
     </div>

@@ -2,6 +2,7 @@ import { useContext, useEffect, useState, type DependencyList } from 'react';
 import { CurrentPageContext } from '../providers/CurrentPage'
 import { MILLSECONDS_IN_SECOND, UPDATE_PER_SECONDS } from './consts'
 import { TotalChatLengthContext } from '../providers/TotalChatLength'
+import { ModalsContext } from '../providers/Modals'
 
 export const useToggle = (start: boolean): [boolean, () => void] => {
     const [isToggled, setToggle] = useState(start)
@@ -43,13 +44,9 @@ export const useUpdateInterval = (callback: () => void, deps?: DependencyList) =
 }
 
 export const useTotalChatLength = () => {
-    const [length, setLength] = useContext(TotalChatLengthContext)
+    return useContext(TotalChatLengthContext)
+}
 
-    return [
-        length, 
-        (len: number) => {
-            setLength(len)
-            sessionStorage.setItem('total-length', len.toString())
-        }
-    ] as [number, (len: number) => void]
+export const useModals = () => {
+    return useContext(ModalsContext)
 }

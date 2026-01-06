@@ -1,4 +1,6 @@
 import type MessageOptions from '../interfaces/MessageOptions'
+import type { ModalComponent } from '../interfaces/modal/modal-types'
+import type ModalConfig from '../interfaces/modal/ModalConfig'
 import type PlayerOptions from '../interfaces/PlayerOptions'
 import type ServerState from '../interfaces/ServerState'
 import type { SchemaObject, WebSocketMessage } from './types'
@@ -109,5 +111,54 @@ export const webSocketMessageSchema: SchemaObject<WebSocketMessage<any>> = {
                 }
             ]
         }
+    }
+}
+
+export const modalComponentsSchema: SchemaObject<ModalComponent[]> = {
+    type: 'array',
+    items: {
+        type: 'object',
+        required: ['id', 'type', 'value'],
+        properties: {
+            id: {
+                type: 'string'
+            },
+            type: {
+                type: 'string'
+            },
+            value: {
+                type: 'object',
+                required: []
+            }
+        }
+    }
+}
+
+export const modalConfigSchema: SchemaObject<ModalConfig> = {
+    type: 'object',
+    required: ['components', 'id', 'options'],
+    properties: {
+        id: {
+            type: 'string'
+        },
+        options: {
+            type: 'object',
+            required: ['cancel', 'exit', 'ok', 'title'],
+            properties: {
+                cancel: {
+                    type: 'string',
+                },
+                ok: {
+                    type: 'string',
+                },
+                title: {
+                    type: 'string',
+                },
+                exit: {
+                    type: 'boolean',
+                },
+            }
+        },
+        components: modalComponentsSchema
     }
 }

@@ -10,6 +10,10 @@
     @media (max-width: sizes.$tablet-width) {
         grid-template-columns: 100%;
     }
+
+    & > * {
+        height: 100%;
+    }
 }
 
 .setting-title {

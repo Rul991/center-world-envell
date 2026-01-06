@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent } from 'react'
+import { useEffect, useState, type ChangeEvent } from 'react'
 import type StringInputProps from '../../../props/StringInputProps'
 import styles from './StringInput.module.scss'
 
@@ -9,8 +9,11 @@ const StringInput = ({title, value = '', onChange = () => {}}: StringInputProps)
     const inputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value
         setText(value)
-        onChange(value)
     }
+
+    useEffect(() => {
+        onChange(text.trim())
+    }, [text])
 
     return (
         <div className={styles['string-input']}>

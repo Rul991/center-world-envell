@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import type ToggleSwitchProps from '../../../props/ToggleSwitchProps';
 import { useToggle } from '../../../utils/hooks'
 import styles from './ToggleSwitch.module.scss'
@@ -10,8 +11,11 @@ const ToggleSwitch = ({
     const [toggled, toggle] = useToggle(startValue)
     const onClick = () => {
         toggle()
-        onToggle(!toggled)
     }
+
+    useEffect(() => {
+        onToggle(toggled)
+    }, [toggled])
 
     return (
         <div className={styles['switch']}>

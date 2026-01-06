@@ -37,3 +37,7 @@ $list-back-color: $disable-color;
 $option-back-color: $enable-color;
 
 $darken-background: #00000067;
+
+@media (prefers-color-scheme: dark) {
+    $dark-back-color: #fff;
+}

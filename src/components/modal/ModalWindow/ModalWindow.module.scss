@@ -1,4 +1,22 @@
 @use '../../../scss/utils/colors' as colors;
+@use '../../../scss/utils/sizes' as sizes;
+
+$content-padding: 1rem;
+
+@function offset($value) {
+    @return calc((100% - $value) / 2);
+}
+
+@mixin size($height: 75%, $width: $height) {
+    $top-offset: offset($height);
+    $left-offset: offset($width);
+
+    width: $width;
+    min-height: $height;
+
+    top: $top-offset;
+    left: $left-offset;
+}
 
 .container {
     position: fixed;
@@ -11,23 +29,31 @@
 }
 
 .window {
-    $size: 75%;
-    $offset: calc((100% - $size) / 2);
+    @include size(75%, 50%);
 
-    position: fixed;
+    @media (max-width: sizes.$tablet-width) {
+        @include size(75%);
+    }
+
+    @media (max-width: sizes.$large-phone-width) {
+        @include size(80%, 95%);
+    }
+
+    position: absolute;
     box-sizing: border-box;
     background: colors.$back-color;
 
-    width: $size;
-    min-height: $size;
-
-    top: $offset;
-    left: $offset;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
 }
 
 .content {
-    $padding: 1.5rem;
-    padding: $padding;
+    margin: $content-padding calc($content-padding / 2);
+    overflow: auto;
+
+    & > * {
+        margin: 0.25rem;
+    }
 }
 
 .title-bar {
@@ -35,9 +61,10 @@
 
     display: grid;
     grid-template-columns: 1fr auto;
+
     width: 100%;
     padding: $padding;
-    
+
     background-color: colors.$dark-back-color;
     align-items: center;
 }
@@ -48,18 +75,42 @@
     text-align: left;
 }
 
-.buttons {
-
-}
-
 .exit {
     $size: 2.85rem;
 
-    filter: hue-rotate(-140deg) brightness(0.8) saturate(2);
-    width: $size;
-    height: $size;
+    display: grid;
+    min-width: $size;
+    min-height: $size;
 
-    font-size: 1.5rem;
-    padding: 0.1rem;
+    filter: hue-rotate(-140deg) brightness(0.8) saturate(2);
+    padding: 0.5rem;
+
     align-content: center;
+    text-align: center;
+}
+
+.submit {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    justify-content: space-around;
+    margin: 0 calc($content-padding / 2);
+    margin-bottom: calc($content-padding / 5);
+}
+
+.component {
+    &-title {
+        text-align: center;
+        padding: 0;
+        margin: 0;
+    }
+
+    &-text {
+
+    }
+
+    &-grid {
+        display: grid;
+        gap: 1rem;
+    }
 }
