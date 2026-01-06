@@ -3,7 +3,13 @@ import type ClickButtonProps from '../../../props/ClickButtonProps';
 import buttonStyles from '../../../scss/common/buttons.module.scss'
 import defaultStyles from '../../../scss/common/default.module.scss'
 
-const ClickButton = ({children, delay = 325, onClick = () => {}}: ClickButtonProps) => {
+const ClickButton = ({
+    children, 
+    delay = 325, 
+    onClick = () => {},
+    defaultClassName = '',
+    clickedClassName = ''
+}: ClickButtonProps) => {
     const [buttonPressed, setPressed] = useState(false)
 
     const buttonClick = () => {
@@ -16,7 +22,17 @@ const ClickButton = ({children, delay = 325, onClick = () => {}}: ClickButtonPro
     
     return (
         <button 
-            className={`${defaultStyles['default-styles']} ${buttonPressed ? buttonStyles['focus-button'] : ''}`} 
+            className={
+                `${
+                    defaultStyles['default-styles']
+                } ${
+                    defaultClassName
+                } ${
+                    buttonPressed ? 
+                    `${buttonStyles['focus-button']} ${clickedClassName}` : 
+                    ''
+                }`
+            } 
             onClick={buttonClick}
         >
             {children}

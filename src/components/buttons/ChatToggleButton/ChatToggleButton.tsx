@@ -16,23 +16,25 @@ const ChatToggleButton = () => {
     }
 
     useEffect(() => {
-        if(currentPage == CHAT_PAGE_ID) return
+        if (currentPage == CHAT_PAGE_ID) return
 
         WebSocketManager.on<number>('chatLength', result => {
-            if(typeof result == 'number') {
+            if (typeof result == 'number') {
                 const newMessagesLength = Math.max(result - totalLength, 0)
 
                 setLength(newMessagesLength)
 
-                Notification?.requestPermission()
-                .then(permission => {
-                    if(permission == 'granted' && newMessagesLength > 0 && newMessagesLength != notReadMessages) {
-                        new Notification(`Новые сообщения: ${newMessagesLength}`, {
-                            'icon': 'images/logo.png'
+                if (newMessagesLength > 0 && newMessagesLength != notReadMessages) {
+                    setNotReadMessages(newMessagesLength)
+                    Notification?.requestPermission()
+                        .then(permission => {
+                            if (permission == 'granted') {
+                                new Notification(`Новые сообщения: ${newMessagesLength}`, {
+                                    'icon': 'images/logo.png'
+                                })
+                            }
                         })
-                        setNotReadMessages(newMessagesLength)
-                    }
-                })
+                }
             }
             else {
                 console.error(`Server Error: ${result}`)
@@ -42,9 +44,9 @@ const ChatToggleButton = () => {
 
     return (
         <ToggleButton
-            className={length > 0 ? styles['new-messages'] : ''} 
-            onToggle={onToggle} 
-            title={`Чат ${length > 0 ? `(${length})` : ''}`} 
+            className={length > 0 ? styles['new-messages'] : ''}
+            onToggle={onToggle}
+            title={`Чат ${length > 0 ? `(${length})` : ''}`}
             id={1}
         ></ToggleButton>
     )

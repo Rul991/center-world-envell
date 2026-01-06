@@ -1,3 +1,4 @@
+import type { JSONSchemaType } from 'ajv'
 import type {
   Dispatch,
   SetStateAction,
@@ -43,7 +44,7 @@ export type JavascriptTypes = PrimitiveJavascriptTypes | ObjectJavascriptTypes |
 // shorthands
 
 export type AnyRecord = Record<string, any>
-export type SchemaObject<T> = Record<keyof T, JavascriptTypes>
+export type SchemaObject<T> = JSONSchemaType<T>
 
 // objects
 

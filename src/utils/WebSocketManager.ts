@@ -7,7 +7,7 @@ type Callback<T> = (data: T) => void | Promise<void>
 type Listener = { name: string, callback: Callback<any> }
 
 export default class WebSocketManager {
-    private static _ip = import.meta.env.PROD ? '/ws' : 'ws://127.0.0.1:8080/ws'
+    private static _ip = import.meta.env.PROD ? '/ws' : '/api/ws'
     private static _webSocket = new WebSocket(this._ip)
 
     private static _listeners: Record<string, Listener | undefined> = {}
@@ -21,8 +21,7 @@ export default class WebSocketManager {
             try {
                 const parsedValue: WebSocketMessage<any> = JSON.parse(e.data)
                 if(!ObjectValidator.isValidatedObject(parsedValue, webSocketMessageSchema)) {
-                    const example = ObjectValidator.createJsonExampleObject(webSocketMessageSchema)
-                    throw new Error(`Wrong message, its must be ${example}`)
+                    throw new Error(`Wrong message`)
                 }
 
                 const listener = this._listeners[parsedValue.type]
@@ -33,6 +32,15 @@ export default class WebSocketManager {
             catch(e) {
                 console.error(e)
             }
+        })
+
+        this._webSocket.addEventListener('error', e => {
+            console.error('websocket error', e)
+            this._webSocket = new WebSocket(this._ip)
+        })
+
+        this._webSocket.addEventListener('close', e => {
+            this._webSocket = new WebSocket(this._ip)
         })
     }
 

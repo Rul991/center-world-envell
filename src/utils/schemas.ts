@@ -3,36 +3,111 @@ import type PlayerOptions from '../interfaces/PlayerOptions'
 import type ServerState from '../interfaces/ServerState'
 import type { SchemaObject, WebSocketMessage } from './types'
 
-export const messageUndefinedSchema: SchemaObject<MessageOptions> = {
-    user: 'undefined',
-    msg: 'string'
-}
-
-export const messageStringSchema: SchemaObject<MessageOptions> = {
-    user: 'string',
-    msg: 'string'
-}
-
-export const stateSchema: SchemaObject<ServerState> = {
-    title: 'string',
-    props: 'object'
-}
-
-export const playersSchema: SchemaObject<PlayerOptions> = {
-    id: 'number',
-    className: 'string',
-    name: 'string',
-    hp: {
-        current: 'number',
-        max: 'number'
-    },
-    mana: {
-        current: 'number',
-        max: 'number'
+export const messagesSchema: SchemaObject<MessageOptions[]> = {
+    type: 'array',
+    items: {
+        type: 'object',
+        required: ['msg'],
+        properties: {
+            msg: {
+                type: 'string'
+            },
+            user: {
+                type: 'string',
+                nullable: true
+            }
+        }
     }
 }
 
+export const statesSchema: SchemaObject<ServerState[]> = {
+    type: 'array',
+    items: {
+        type: 'object',
+        required: ['props', 'title'],
+        properties: {
+            title: {
+                type: 'string'
+            },
+            props: {
+                type: 'object',
+                required: []
+            }
+        }
+    }
+}
+
+export const playersSchema: SchemaObject<PlayerOptions[]> = {
+    type: 'array',
+    items: {
+        type: 'object',
+        required: ['id', 'className', 'name', 'hp', 'mana'],
+        properties: {
+            id: {
+                type: 'number'
+            },
+            className: {
+                type: 'string'
+            },
+            name: {
+                type: 'string'
+            },
+            hp: {
+                type: 'object',
+                required: ['current', 'max'],
+                properties: {
+                    current: {
+                        type: 'number'
+                    },
+                    max: {
+                        type: 'number'
+                    }
+                }
+            },
+            mana: {
+                type: 'object',
+                required: ['current', 'max'],
+                properties: {
+                    current: {
+                        type: 'number'
+                    },
+                    max: {
+                        type: 'number'
+                    }
+                }
+            }
+        }
+    }
+}
+
+//@ts-ignore
 export const webSocketMessageSchema: SchemaObject<WebSocketMessage<any>> = {
-    type: 'string',
-    data: 'any'
+    type: 'object',
+    required: ['type'],
+    properties: {
+        type: {
+            type: 'string'
+        },
+        data: {
+            type: ['object', 'string', 'number', 'array', 'boolean', 'integer'],
+            nullable: true,
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'boolean'
+                },
+                {
+                    type: 'number'
+                },
+                {
+                    type: 'object'
+                },
+                {
+                    type: 'array'
+                }
+            ]
+        }
+    }
 }

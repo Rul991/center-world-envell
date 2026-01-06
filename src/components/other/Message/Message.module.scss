@@ -15,5 +15,7 @@
     &-message {
         color: colors.$dark-fore-color;
         overflow-x: auto;
+        font-family: 'h12';
+        letter-spacing: .0125rem;
     }
 }

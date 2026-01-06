@@ -1,16 +1,16 @@
 import {
     useEffect,
     useState,
-} from 'react';
-import type MessageOptions from '../../../interfaces/MessageOptions';
-import WebSocketManager from '../../../utils/WebSocketManager';
-import ChatInput from '../../other/ChatInput';
-import TogglePage from '../TogglePage';
+} from 'react'
+import type MessageOptions from '../../../interfaces/MessageOptions'
+import WebSocketManager from '../../../utils/WebSocketManager'
+import ChatInput from '../../other/ChatInput'
+import TogglePage from '../TogglePage'
 import { useTotalChatLength } from '../../../utils/hooks'
 import Message from '../../other/Message'
 import { CHAT_PAGE_ID } from '../../../utils/consts'
 import ObjectValidator from '../../../utils/ObjectValidator'
-import { messageStringSchema, messageUndefinedSchema } from '../../../utils/schemas'
+import { messagesSchema } from '../../../utils/schemas'
 import styles from './ChatPage.module.scss'
 import defaultStyles from '../../../scss/common/default.module.scss'
 
@@ -21,7 +21,7 @@ const ChatPage = () => {
         parsed = JSON.parse(sessionStorage.getItem('messages') || '[]')
     }
 
-    catch(e) {
+    catch (e) {
         console.error('Parsed error: ', e)
     }
 
@@ -36,33 +36,31 @@ const ChatPage = () => {
 
     const onSend = (data: MessageOptions) => {
         const getMessageWithoutNickname = (text: any): string => {
-            if(typeof text == 'string') {
+            if (typeof text == 'string') {
                 const result = text.split(':')
                 return result[1]?.trim() ?? '???'
             }
             else return text ?? '???'
         }
 
-        console.log(data)
         data.msg = getMessageWithoutNickname(data.msg)
         addMessages([data])
     }
 
     useEffect(() => {
-        WebSocketManager.send('chatMessages', {messagesLength: totalLength})
+        WebSocketManager.send('chatMessages', { messagesLength: totalLength })
     }, [])
 
     useEffect(() => {
         WebSocketManager.on<MessageOptions[]>('chatMessages', result => {
             const errorMessage: MessageOptions = {
-                user: 'Ошибка с сервера', 
-                msg: ObjectValidator.getWrongSchemaMessage(messageStringSchema)
+                user: 'Ошибка с сервера',
+                msg: ObjectValidator.getWrongSchemaMessage()
             }
 
-            if(ObjectValidator.isArrayWithObjects(result, messageStringSchema) || 
-                ObjectValidator.isArrayWithObjects(result, messageUndefinedSchema)) {
-                    addMessages(result)
-                    setTotalLength(totalLength + result.length)
+            if (ObjectValidator.isValidatedObject(result, messagesSchema)) {
+                addMessages(result)
+                setTotalLength(totalLength + result.length)
             }
             else addMessages([errorMessage])
         })
@@ -76,7 +74,7 @@ const ChatPage = () => {
                 <ChatInput onSend={onSend} />
                 <div className={styles.messages}>
                     {
-                        messages.map(({user, msg}, i) => 
+                        messages.map(({ user, msg }, i) =>
                             <Message key={i} user={user ?? 'WebClient'} msg={msg} />
                         )
                     }

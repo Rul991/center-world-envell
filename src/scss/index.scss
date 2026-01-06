@@ -29,6 +29,10 @@
         background: colors.$alternative-color;
         border-radius: 0;
     }
+
+    &:focus {
+        outline: none;
+    }
 }
 
 body, html {

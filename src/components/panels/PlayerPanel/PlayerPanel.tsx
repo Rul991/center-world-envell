@@ -16,13 +16,13 @@ const PlayerPanel = () => {
     useEffect(() => {
         WebSocketManager.on<PlayerOptions[]>('players', value => {
             if(value.length) {
-                if(ObjectValidator.isArrayWithObjects(value, playersSchema)) {
+                if(ObjectValidator.isValidatedObject(value, playersSchema)) {
                     setPlayers([PlayerGenerator.cool('Все ок', 200), ...value])
                 }
                 else {
                     setPlayers([PlayerGenerator.error(
                         500, 
-                        ObjectValidator.getWrongSchemaMessage(playersSchema))
+                        ObjectValidator.getWrongSchemaMessage())
                     ])
                 }
             }

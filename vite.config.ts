@@ -1,8 +1,8 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-const AE_IP = 'http://26.8.57.245:8080/'
-const MY_IP = 'http://127.0.0.1:8080/'
+const AE_IP = 'ws://26.8.57.245:8080/'
+const MY_IP = 'ws://127.0.0.1:8080/'
 
 class Server {
   static Ae = 0
@@ -10,7 +10,7 @@ class Server {
   static Vite = 2
 }
 
-const usedServer = Server.My
+const usedServer = Server.Ae
 const serverIp = usedServer == Server.My ? MY_IP : AE_IP
 const proxy = usedServer != Server.Vite ? 
     {
@@ -18,7 +18,7 @@ const proxy = usedServer != Server.Vite ?
         changeOrigin: true,
         target: serverIp,
         rewrite: (path: string) => path.replace(/^\/api/, ''),
-        localAddress: '0.0.0.0'
+        localAddress: ''
       }
     } :
     undefined

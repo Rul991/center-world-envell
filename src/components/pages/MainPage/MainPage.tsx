@@ -7,7 +7,7 @@ import WebSocketManager from '../../../utils/WebSocketManager'
 import Card from '../../other/Card';
 import TogglePage from '../TogglePage';
 import ObjectValidator from '../../../utils/ObjectValidator'
-import { stateSchema } from '../../../utils/schemas'
+import { statesSchema } from '../../../utils/schemas'
 import defaultStyles from '../../../scss/common/default.module.scss'
 
 const MainPage = () => {
@@ -18,13 +18,13 @@ const MainPage = () => {
             {
                 title: 'Ошибка!', 
                 props: {
-                    'Ошибка': ObjectValidator.getWrongSchemaMessage(stateSchema)
+                    'Ошибка': ObjectValidator.getWrongSchemaMessage()
                 }
             }
         ]
 
         WebSocketManager.on<ServerState[]>('state', data => {
-            if(ObjectValidator.isArrayWithObjects(data, stateSchema))
+            if(ObjectValidator.isValidatedObject(data, statesSchema))
                 setStates(data)
             else setStates(errorStates)
         })
