@@ -8,46 +8,46 @@ import { CHAT_PAGE_ID } from '../../../utils/consts'
 const ChatToggleButton = () => {
     const [totalLength, _] = useTotalChatLength()
     const [currentPage] = useCurrentPage()
-    const [length, setLength] = useState(0)
+
     const [notReadMessages, setNotReadMessages] = useState(0)
+    const [readMessages, setReadMessages] = useState(0)
 
     const onToggle = () => {
-        setLength(0)
+        setReadMessages(totalLength)
     }
 
     useEffect(() => {
-        WebSocketManager.on<number>('chatLength', result => {
-            if (typeof result == 'number') {
-                const newMessagesLength = Math.max(result - totalLength, 0)
-                setLength(newMessagesLength)
-                if(currentPage == CHAT_PAGE_ID) {
-                    setNotReadMessages(0)
-                    return
-                }
+        const isCurrentPageChat = currentPage == CHAT_PAGE_ID
 
-                if (newMessagesLength > 0 && newMessagesLength != notReadMessages) {
-                    setNotReadMessages(newMessagesLength)
-                    Notification?.requestPermission()
-                        .then(permission => {
-                            if (permission == 'granted') {
-                                new Notification(`Новые сообщения: ${newMessagesLength}`, {
-                                    'icon': 'images/logo.png'
-                                })
-                            }
+        if (isCurrentPageChat) {
+            setReadMessages(totalLength)
+        }
+
+        return () => WebSocketManager.off('chatLength')
+    }, [totalLength, currentPage, setReadMessages])
+
+    useEffect(() => {
+        const min = 0
+        const notReadMessages = Math.max(totalLength - readMessages, min)
+        setNotReadMessages(notReadMessages)
+
+        if (notReadMessages > min) {
+            Notification?.requestPermission()
+                .then(permission => {
+                    if (permission == 'granted') {
+                        new Notification(`Новые сообщения: ${notReadMessages}`, {
+                            'icon': 'images/logo.png'
                         })
-                }
-            }
-            else {
-                console.error(`Server Error: ${result}`)
-            }
-        })
-    }, [totalLength, length, currentPage, notReadMessages])
+                    }
+                })
+        }
+    }, [readMessages, totalLength])
 
     return (
         <ToggleButton
-            className={length > 0 ? styles['new-messages'] : ''}
+            className={notReadMessages > 0 ? styles['new-messages'] : ''}
             onToggle={onToggle}
-            title={`Чат ${length > 0 ? `(${length})` : ''}`}
+            title={`Чат ${notReadMessages > 0 ? `(${notReadMessages})` : ''}`}
             id={1}
         ></ToggleButton>
     )

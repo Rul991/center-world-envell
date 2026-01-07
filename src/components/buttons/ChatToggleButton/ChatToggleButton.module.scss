@@ -1,5 +1,15 @@
 @use '../../../scss/utils/colors';
+@use '../../../scss/utils/placeholders';
+
+@keyframes rgb-animation {
+    50% {
+        color: colors.$error-color;
+    }
+}
 
 .new-messages {
+    @extend %transition-300ms;
+
+    animation: rgb-animation 1s ease-in-out infinite;
     color: colors.$new-message-color;
 }

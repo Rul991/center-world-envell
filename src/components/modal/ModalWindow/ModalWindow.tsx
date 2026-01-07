@@ -389,6 +389,10 @@ const ModalWindow = ({
         setComponents(createComponents(components, setResult))
     }, [components])
 
+    const hasOk = ok.length > 0
+    const hasCancel = cancel.length > 0
+    const isOnlyOneButton = !(hasOk && hasCancel)
+
     return (
         <div id={`${id}`} className={styles.container}>
             <div className={styles.window}>
@@ -410,9 +414,9 @@ const ModalWindow = ({
                         jsx
                     }
                 </div>
-                <div className={styles.submit}>
+                <div className={isOnlyOneButton ? styles['submit-one'] : styles['submit-two']}>
                     {
-                        ok.length > 0 ?
+                        hasOk ?
                             <ClickButton
                                 onClick={okCallback}
                             >{ok}</ClickButton> :
@@ -420,7 +424,7 @@ const ModalWindow = ({
                     }
 
                     {
-                        cancel.length > 0 ?
+                        hasCancel ?
                             <ExitButton
                                 cancelCallback={cancelCallback}
                                 title={cancel}
