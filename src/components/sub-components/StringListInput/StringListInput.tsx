@@ -1,17 +1,24 @@
-import { type ChangeEvent } from 'react'
+import { useEffect, useState, type ChangeEvent } from 'react'
 import type StringListProps from '../../../props/StringListProps'
 import styles from './StringListInput.module.scss'
 
 const StringListInput = ({title, choosedValue, values, onChoose = () => {}}: StringListProps) => {
+    const [defaultValue] = useState(choosedValue ?? values[0] ?? '')
+    const [value, setValue] = useState(defaultValue)
+    
     const selectChange = (e: ChangeEvent<HTMLSelectElement>) => {
         const value = e.target.value
-        onChoose(value)
+        setValue(value)
     }
+
+    useEffect(() => {
+        onChoose(value)
+    }, [value])
 
     return (
         <div className={styles['string-list']}>
             <div className={styles.title}>{title}:</div>
-            <select className={styles.select} onChange={selectChange} defaultValue={choosedValue ?? values[0] ?? ''}>
+            <select className={styles.select} onChange={selectChange} defaultValue={defaultValue}>
             {
                 values.map((text, i) => 
                     <option className={styles.option} key={i} value={text}>{text}</option>

@@ -1,11 +1,11 @@
 import {
-  useEffect,
-  useState,
-} from 'react';
-import type PlayerOptions from '../../../interfaces/PlayerOptions';
-import PlayerGenerator from '../../../utils/PlayerOptionsGenerator';
-import WebSocketManager from '../../../utils/WebSocketManager';
-import PlayerComponent from '../../other/PlayerComponent';
+    useEffect,
+    useState,
+} from 'react'
+import type PlayerOptions from '../../../interfaces/PlayerOptions'
+import PlayerGenerator from '../../../utils/PlayerOptionsGenerator'
+import WebSocketManager from '../../../utils/WebSocketManager'
+import PlayerComponent from '../../other/PlayerComponent'
 import ObjectValidator from '../../../utils/ObjectValidator'
 import { playersSchema } from '../../../utils/schemas'
 import styles from './PlayerPanel.module.scss'
@@ -16,19 +16,16 @@ const PlayerPanel = () => {
 
     useEffect(() => {
         WebSocketManager.on<PlayerOptions[]>('players', value => {
-            if(value.length) {
-                if(ObjectValidator.isValidatedObject(value, playersSchema)) {
-                    setPlayers([PlayerGenerator.cool('Все ок', 200), ...value])
-                }
-                else {
-                    setPlayers([PlayerGenerator.error(
-                        500, 
-                        ObjectValidator.getWrongSchemaMessage())
-                    ])
-                }
+            if (ObjectValidator.isValidatedObject(value, playersSchema)) {
+                setPlayers([PlayerGenerator.cool('Все ок', 200), ...value])
             }
             else {
-                setPlayers([PlayerGenerator.empty()])
+                setPlayers([
+                    PlayerGenerator.error(
+                        500,
+                        ObjectValidator.getWrongSchemaMessage()
+                    )
+                ])
             }
         })
 
@@ -38,7 +35,7 @@ const PlayerPanel = () => {
     return <div className={`padding-panel ${styles.panel}`}>
         <div className={`players-list`}>
             {
-                players.length <= 0 ? 
+                players.length <= 0 ?
                     <PlayerComponent options={PlayerOptionsGenerator.empty()} /> :
                     undefined
             }

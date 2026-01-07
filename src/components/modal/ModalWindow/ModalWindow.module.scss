@@ -39,19 +39,21 @@ $content-padding: 1rem;
         @include size(80%, 95%);
     }
 
-    position: absolute;
-    box-sizing: border-box;
-    background: colors.$back-color;
+    & {
+        position: absolute;
+        box-sizing: border-box;
+        background: colors.$back-color;
 
-    display: grid;
-    grid-template-rows: auto 1fr auto;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+    }
 }
 
 .content {
     margin: $content-padding calc($content-padding / 2);
     overflow: auto;
 
-    & > * {
+    &>* {
         margin: 0.25rem;
     }
 }
