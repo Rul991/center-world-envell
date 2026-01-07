@@ -16,13 +16,14 @@ const ChatToggleButton = () => {
     }
 
     useEffect(() => {
-        if (currentPage == CHAT_PAGE_ID) return
-
         WebSocketManager.on<number>('chatLength', result => {
             if (typeof result == 'number') {
                 const newMessagesLength = Math.max(result - totalLength, 0)
-
                 setLength(newMessagesLength)
+                if(currentPage == CHAT_PAGE_ID) {
+                    setNotReadMessages(0)
+                    return
+                }
 
                 if (newMessagesLength > 0 && newMessagesLength != notReadMessages) {
                     setNotReadMessages(newMessagesLength)
