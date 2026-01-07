@@ -3,7 +3,7 @@ import TogglePage from '../TogglePage';
 import ToggleSwitch from '../../sub-components/ToggleSwitch';
 import NumberRange from '../../sub-components/NumberRange'
 import WebSocketManager from '../../../utils/WebSocketManager'
-import type { ClientSettings, SchemaObject, SettingListProps, SettingRangeProps, Settings, SettingsComponentValue, SettingValue } from '../../../utils/types'
+import type { ClientSettings, SettingListProps, SettingRangeProps, Settings, SettingsComponentValue, SettingValue } from '../../../utils/types'
 import { useEffect, useState } from 'react'
 import StringInput from '../../sub-components/StringInput'
 import StringListInput from '../../sub-components/StringListInput'
@@ -11,11 +11,6 @@ import SettingsParser from '../../../utils/SettingsParser'
 import ObjectValidator from '../../../utils/ObjectValidator'
 import styles from './SettingsPage.module.scss'
 import defaultStyles from '../../../scss/common/default.module.scss'
-
-type SaveResult = {
-    ok: boolean
-    reason?: string
-}
 
 const SettingsPage = () => {
     const [settings, setRawSettings] = useState<Settings>({})
@@ -53,43 +48,8 @@ const SettingsPage = () => {
             else setRawSettings(SettingsParser.getError('Parsing Error'))
         })
 
-        WebSocketManager.on<SaveResult>('saveSettings', data => {
-            const schema: SchemaObject<SaveResult> = {
-                type: 'object',
-                required: ['ok'],
-                properties: {
-                    ok: {
-                        type: 'boolean'
-                    },
-                    reason: {
-                        type: 'string',
-                        nullable: true
-                    }
-                }
-            }
-            const isValidated = ObjectValidator.isValidatedObject(data, schema)
-
-            const {
-                ok,
-                reason
-            }: SaveResult = {
-                ok: isValidated ? data.ok : false,
-                reason: isValidated ? 
-                    data.reason : 
-                    ObjectValidator.getWrongSchemaMessage()
-            }
-
-            if(ok) {
-                alert('Настройки успешно сохранены!')
-            }
-            else {
-                alert(`Не удалось сохранить настройки!\nПричина: ${reason}`)
-            }
-        })
-
         return () => {
             WebSocketManager.off('getSettings')
-            WebSocketManager.off('saveSettings')
         }
     }, [])
 
