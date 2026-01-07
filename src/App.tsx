@@ -15,13 +15,13 @@ const App = () => {
             <ModalWindowsContainer />
             <Header />
             <CurrentPageProvider>
-                <KeyboardHandler />
                 <main>
                     <TotalChatLengthProvider>
                         <SidePanel />
                         <MainPanel />
                     </TotalChatLengthProvider>
                     <PlayerPanel />
+                    <KeyboardHandler />
                 </main>
             </CurrentPageProvider>
         </ModalsProvider>

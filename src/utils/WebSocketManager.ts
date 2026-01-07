@@ -45,15 +45,16 @@ export default class WebSocketManager {
     }
 
     static send<T>(name: string, data: T): void {
+        console.log({
+            data,
+            name,
+            title: 'WebSocketManager.send'
+        })
+
         const send = (id?: number) => {
             if (this._webSocket.readyState != WebSocket.OPEN) return false
 
             this._webSocket.send(JSON.stringify({ [name]: data }))
-            console.log({
-                data,
-                name,
-                title: 'WebSocketManager.send'
-            })
             if (id) clearInterval(id)
 
             return true
