@@ -59,8 +59,27 @@ const ChatPage = () => {
             }
 
             if (ObjectValidator.isValidatedObject(result, messagesSchema)) {
+                const resultLength = result.length
                 addMessages(result)
-                setTotalLength(totalLength + result.length)
+                setTotalLength(totalLength + resultLength)
+
+                if (resultLength > 0 && document.visibilityState == 'hidden') {
+                    Notification?.requestPermission()
+                        .then(permission => {
+                            if (permission == 'granted') {
+                                new Notification(`Новые сообщения (${resultLength})`, {
+                                    'icon': 'images/logo.png',
+                                    body: result
+                                        .reverse()
+                                        .slice(0, 3)
+                                        .map(message =>
+                                            `${message.user}: ${message.msg}`
+                                        )
+                                        .join('\n')
+                                })
+                            }
+                        })
+                }
             }
             else addMessages([errorMessage])
         })

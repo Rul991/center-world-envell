@@ -30,17 +30,6 @@ const ChatToggleButton = () => {
         const min = 0
         const notReadMessages = Math.max(totalLength - readMessages, min)
         setNotReadMessages(notReadMessages)
-
-        if (notReadMessages > min) {
-            Notification?.requestPermission()
-                .then(permission => {
-                    if (permission == 'granted') {
-                        new Notification(`Новые сообщения: ${notReadMessages}`, {
-                            'icon': 'images/logo.png'
-                        })
-                    }
-                })
-        }
     }, [readMessages, totalLength])
 
     return (
